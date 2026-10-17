@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: tradepulse-pro
+    runtime: static
+    plan: free
+    branch: main
+    autoDeploy: true
+    buildCommand: echo "TradePulse Pro static files ready"
+    staticPublishPath: .
+    headers:
+      - path: /*
+        name: X-Content-Type-Options
+        value: nosniff
+      - path: /*
+        name: Referrer-Policy
+        value: strict-origin-when-cross-origin
+      - path: /*
+        name: X-Frame-Options
+        value: DENY

@@ -1,0 +1,47 @@
+TRADEPULSE PRO — VERSÃO MULTIPÁGINA
+
+COMO ABRIR
+1. Extraia o ZIP inteiro para uma pasta.
+2. Abra index.html no navegador.
+3. Para gráficos, preços e backtesting, mantenha conexão com a internet.
+4. Todos os arquivos HTML, common.css e common.js devem permanecer juntos na mesma pasta.
+5. Para sincronização mais confiável entre páginas, execute o servidor local descrito abaixo e abra o endereço http://127.0.0.1:8765/index.html.
+
+PÁGINAS
+- index.html: início e atalhos
+- dashboard.html: painel de mercado original com gráficos/indicadores e módulos de risco/alertas/simulador
+- risco.html: calculadora de gestão de risco
+- alertas.html: alertas locais de preço
+- simulador.html: paper trading
+- backtest.html: backtesting de cruzamento EMA
+- desempenho.html: métricas, histórico e exportação CSV
+- operar.html: ordens reais MARKET/LIMIT na conta Binance (Testnet por padrão; modo Real exige TRADEPULSE_ALLOW_LIVE=1 no servidor)
+- conexao.html: teste de APIs públicas Binance e OKX e consulta privada opcional de saldo Binance
+
+OPERAR (NOVO)
+- operar.html envia ordens MARKET/LIMIT pela sua conta Binance via backend local (server.py).
+- Por padrão as ordens vão para a SPOT TESTNET (testnet.binance.vision). Crie chaves de teste em https://testnet.binance.vision.
+- Configure no ambiente antes de iniciar: BINANCE_API_KEY, BINANCE_API_SECRET.
+- Para habilitar o modo REAL (dinheiro real): inicie com TRADEPULSE_ALLOW_LIVE=1 e troque o modo na página Operar, com confirmação.
+- O servidor valida LOT_SIZE, NOTIONAL e PRICE_FILTER antes de cada ordem e nunca registra chaves em log ou disco.
+
+SINCRONIZAÇÃO
+As páginas usam localStorage do mesmo navegador/perfil para compartilhar seleção de ativo, alertas, trades simulados e último backtest. Isso não sincroniza automaticamente entre dispositivos ou navegadores.
+
+LIMITAÇÕES E SEGURANÇA
+- Os alertas locais só são verificados enquanto a página estiver aberta e o navegador estiver ativo.
+- Paper trading é simulação e não envia ordens reais.
+- Backtesting é uma simulação simplificada e não prevê resultados futuros.
+- A página Conexão consulta endpoints públicos de mercado. A consulta privada opcional de saldo Binance funciona apenas quando o servidor local server.py está ativo e recebe as credenciais por variáveis de ambiente. O backend expõe apenas GET /api/account; não há endpoints para ordens, negociação ou saques. Use uma chave criada com permissão somente de leitura e nunca habilite negociação/saques.
+- As APIs públicas e a biblioteca de gráficos dependem de conexão e podem ficar indisponíveis.
+- Não é recomendação financeira.
+
+
+SERVIDOR LOCAL E CONTA BINANCE SOMENTE LEITURA (OPCIONAL)
+- Requer Python 3 instalado no computador.
+- Windows: execute start_windows.bat. macOS/Linux: execute ./start_mac_linux.sh.
+- Os scripts pedem a API Key e a Secret durante a execução; não as escrevem no projeto. O servidor escuta apenas em 127.0.0.1.
+- Crie na Binance uma chave de API com permissão somente de leitura, desative negociação e saques e, se possível, restrinja por IP. Não use uma chave que tenha permissão de trade.
+- Depois que o servidor iniciar, abra http://127.0.0.1:8765/index.html no mesmo computador e vá a Conexão > “Consultar conta (somente leitura)”.
+- Nunca envie sua chave ou secret a terceiros, nem as coloque em arquivos HTML, Git ou localStorage.
+- A consulta privada é somente para Binance Spot/account info. Não acessa derivativos ou posições de futuros.
